@@ -55,24 +55,35 @@ function createBoard() {
 
 // click gira la carta 
 function flipCard() {
+    // se la board è bloccata (in attesa che un controllo di match finisca), non fa nulla
     if (lockBoard) return;
+    
+    // se la carta cliccata è già una delle carte selezionate, non fa nulla
     if (this === firstCard || this === secondCard || this === thirdCard) return;
-
+    
+    // aggiunge la classe 'turned' alla carta cliccata per visualizzarla come girata
     this.classList.add('turned');
+    
+    // imposta il contenuto della carta con il simbolo contenuto nel suo attributo data-symbol
     this.textContent = this.dataset.symbol;
 
+    // se non c'è ancora una prima carta selezionata, imposta questa carta come prima carta e termina la funzione
     if (!firstCard) {
         firstCard = this;
         return;
     }
 
+    // se non c'è ancora una seconda carta selezionata, imposta questa carta come seconda carta
     if (!secondCard) {
         secondCard = this;
+        // se il livello selezionato è 'me-la-cavo', termina la funzione qui (perché in questo livello si giocano con 2 carte)
         if (selectedLevel === 'me-la-cavo') {
             return;
         }
     }
 
+    // se non c'è ancora una terza carta selezionata e il livello selezionato è 'me-la-cavo',
+    // imposta questa carta come terza carta, blocca la board e controlla se c'è un match
     if (!thirdCard && selectedLevel === 'me-la-cavo') {
         thirdCard = this;
         lockBoard = true;
@@ -80,6 +91,8 @@ function flipCard() {
         return;
     }
 
+    // se si è raggiunto questo punto, significa che il livello non è 'me-la-cavo' o si sta giocando con 2 carte.
+    // blocca la board e controlla se c'è un match tra le due carte selezionate
     lockBoard = true;
     matchControll();
 }
@@ -191,15 +204,15 @@ function startGame() {
     // chiama il reset se si riclicca
     resetGame();
 
-    // mostra tutte le carte per 1 secondo
+    // mostra tutte le carte per 5 secondo
     showAllCards();
-    setTimeout(hideAllCards, 4000);
+    setTimeout(hideAllCards, 5000);
 
     // Esegui showAllCards() ogni 10 secondi e nascondile dopo 3 secondi
-    setInterval(() => {
-        showAllCards();
-        setTimeout(hideAllCards, 3000);
-    }, 10000);
+    // setInterval(() => {
+    //     showAllCards();
+    //     setTimeout(hideAllCards, 3000);
+    // }, 10000);
 
 }
 
