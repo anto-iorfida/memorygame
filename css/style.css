@@ -1,0 +1,190 @@
+/* utility */
+.d-flex {
+    display: flex;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.flex-colum {
+    flex-direction: column;
+}
+
+.gap-5 {
+    gap: 20px;
+}
+
+.p-5 {
+    padding: 20px
+}
+
+.mt-5 {
+    margin-top: 30px;
+}
+
+.around {
+    justify-content: space-around;
+}
+
+
+
+.btn {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: burlywood;
+    color: white;
+}
+
+/* utility */
+.container-info div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    width: 50%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container-info {
+    width: 80%;
+}
+
+.container-button{
+    width: 80%;
+}
+
+.classification{
+    position: absolute;
+    top: 80px;
+    left: 20px;
+}
+
+
+body {
+    height: 100vh;
+    background-image: url(img/legna-in-legno-marroni-luce-sfondo.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+img{
+    max-width: 100%;
+    margin-top: -60px;
+    margin-bottom: -50px;
+}
+
+.grid-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 60%;
+    /* margin: 0 auto; */
+    /* max-width: 40%; */
+}
+
+ol li{
+    border-bottom: 1px solid white;
+    padding: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+.card {
+    /* width: calc(100% / 4 - 10px); */
+    height: 90px;
+    background-color: burlywood;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 5px;
+    box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+}
+
+/* Difficulty level classes */
+.novellino .card {
+    width: calc(100% / 4 - 10px);
+}
+
+.me-la-cavo .card {
+    width: calc(100% / 6 - 10px);
+}
+
+.arrogante .card {
+    width: calc(100% / 4 - 10px);
+}
+
+/* carte girate */
+.card.turned {
+    /* background-color: transparent;
+    color: white;
+    cursor:default;*/
+    border: 0.3px solid bisque; 
+    animation: disappear 1s forwards;
+}
+
+/* carte abbinate */
+.card.matched {
+    background-color: transparent;
+    color: transparent;
+    /* cursor:default; */
+    /* opacity: 1; */
+}
+
+@keyframes disappear {
+    0% {
+        background-color: burlywood;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 999px) {
+    .container {
+        width: 100%;
+    }
+    .classification{
+        display: none;
+    }
+
+}
+@media (max-width: 768px) {
+
+    .grid-game {
+        width: 100%;
+    }
+
+    .card {
+        /* width: 6.25rem; */
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .card {
+        /* width: 5rem; */
+        height: 30;
+        font-size: 1rem;
+    }
+}
