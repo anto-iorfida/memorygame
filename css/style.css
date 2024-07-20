@@ -36,7 +36,7 @@
 .btn {
     padding: 10px;
     border-radius: 20px;
-    background-color: burlywood;
+    background-color : burlywood;
     color: white;
 }
 
@@ -90,6 +90,7 @@ img{
     align-items: center;
     flex-wrap: wrap;
     width: 60%;
+    gap: 6px;
     /* margin: 0 auto; */
     /* max-width: 40%; */
 }
@@ -105,7 +106,9 @@ ol li{
 .card {
     /* width: calc(100% / 4 - 10px); */
     height: 90px;
-    background-color: burlywood;
+    /* background-color : url(img/sfondocaselle.jpeg); */
+    background-image: url(img/pngtree-chinese-traditional-wave-pattern-background-image_1538528.jpg);
+    /* border: 0.3px solid bisque;  */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -113,11 +116,22 @@ ol li{
     color: white;
     cursor: pointer;
     border-radius: 6px;
+    padding-top:2px ;
     margin: 5px;
     box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
 }
+.card img {
+    width: 90%;
+    height: 100%;
+    object-fit: contain;
+}
 
-/* Difficulty level classes */
+
+.card:hover{
+    opacity: 0.8;
+}
+
+/* Difficulty level classes
 .novellino .card {
     width: calc(100% / 4 - 10px);
 }
@@ -128,34 +142,36 @@ ol li{
 
 .arrogante .card {
     width: calc(100% / 4 - 10px);
-}
+} */
 
 /* carte girate */
 .card.turned {
     /* background-color: transparent;
     color: white;
     cursor:default;*/
-    border: 0.3px solid bisque; 
-    animation: disappear 1s forwards;
+    background-image: none;
+    /* border: 0.3px solid bisque;  */
+    /* animation: disappear 2s forwards; */
 }
 
 /* carte abbinate */
 .card.matched {
     background-color: transparent;
+    background-image: none;
     color: transparent;
     /* cursor:default; */
     /* opacity: 1; */
 }
 
-@keyframes disappear {
+/* @keyframes disappear {
     0% {
-        background-color: burlywood;
+        background-image: url(img/pngtree-chinese-traditional-wave-pattern-background-image_1538528.jpg);
     }
 
     100% {
-        background-color: transparent;
+        background-image: none;
     }
-}
+} */
 
 /* Media queries for responsiveness */
 @media (max-width: 999px) {
@@ -170,12 +186,12 @@ ol li{
 @media (max-width: 768px) {
 
     .grid-game {
-        width: 100%;
+        width: 80%;
     }
 
     .card {
         /* width: 6.25rem; */
-        height: 50px;
+        height: 60px;
         font-size: 1.25rem;
     }
 
@@ -184,7 +200,7 @@ ol li{
 @media (max-width: 480px) {
     .card {
         /* width: 5rem; */
-        height: 30;
+        height: 60px;
         font-size: 1rem;
     }
 }

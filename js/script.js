@@ -15,11 +15,21 @@ let point = 0;
 let nameUser = '';
 // livello selezionato
 let selectedLevel = '';
+// suono abilitato o no
+let soundEnabled = true; // inizialmente il suono è abilitato
+// variabile tempo gioco 
+let startTime;
+
+// disabilita il suono al click del bottone
+document.getElementById('offSound').addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    document.getElementById('offSound').textContent = soundEnabled ? 'Disabilita Suono' : 'Abilita Suono';
+});
 
 // array
 const symbolsNovellino = ['a', 'a', 'b', 'b', 'c', 'c', 'd', 'd', 'e', 'e', 'f', 'f'];
 const symbolsMeLaCavo = ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c', 'd', 'd', 'd', 'e', 'e', 'e', 'f', 'f', 'f'];
-const symbolsArrogante = ['a', 'a', 'a', 'a', 'b', 'b', 'b', 'b', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd', 'e', 'e', 'e', 'e', 'f', 'f', 'f', 'f'];
+const symbolsArrogante = ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c', 'd', 'd', 'd', 'e', 'e', 'e', 'f', 'f', 'f', 'g', 'g', 'g', 'h', 'h', 'h'];
 
 let symbols = [];
 
@@ -38,6 +48,8 @@ let lockBoard = false;
 // creare tabellone
 function createBoard() {
     shuffledSymbols.forEach(symbol => {
+
+
         const card = document.createElement('div');
         // aggiunta classe standard per la classe
         card.classList.add('card');
@@ -57,15 +69,22 @@ function createBoard() {
 function flipCard() {
     // se la board è bloccata (in attesa che un controllo di match finisca), non fa nulla
     if (lockBoard) return;
-    
+
     // se la carta cliccata è già una delle carte selezionate, non fa nulla
     if (this === firstCard || this === secondCard || this === thirdCard) return;
-    
+
+    // Riproduce il suono di click solo se il suono è abilitato
+    if (soundEnabled) {
+        const clickSound = document.getElementById('clickSound');
+        clickSound.play();
+    }
+
     // aggiunge la classe 'turned' alla carta cliccata per visualizzarla come girata
     this.classList.add('turned');
-    
+
     // imposta il contenuto della carta con il simbolo contenuto nel suo attributo data-symbol
-    this.textContent = this.dataset.symbol;
+    // this.textContent = this.dataset.symbol;
+    this.innerHTML = `<img src="css/img/${this.dataset.symbol}.png" alt="">`;
 
     // se non c'è ancora una prima carta selezionata, imposta questa carta come prima carta e termina la funzione
     if (!firstCard) {
@@ -76,22 +95,22 @@ function flipCard() {
     // se non c'è ancora una seconda carta selezionata, imposta questa carta come seconda carta
     if (!secondCard) {
         secondCard = this;
-        // se il livello selezionato è 'me-la-cavo', termina la funzione qui (perché in questo livello si giocano con 2 carte)
-        if (selectedLevel === 'me-la-cavo') {
+        // se il livello selezionato è 'me-la-cavo' o 'arrogante', termina la funzione qui (perché in questi livelli si gioca con 3 carte)
+        if (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante') {
             return;
         }
     }
 
-    // se non c'è ancora una terza carta selezionata e il livello selezionato è 'me-la-cavo',
+    // se non c'è ancora una terza carta selezionata e il livello selezionato è 'me-la-cavo' o 'arrogante',
     // imposta questa carta come terza carta, blocca la board e controlla se c'è un match
-    if (!thirdCard && selectedLevel === 'me-la-cavo') {
+    if (!thirdCard && (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante')) {
         thirdCard = this;
         lockBoard = true;
         matchControll();
         return;
     }
 
-    // se si è raggiunto questo punto, significa che il livello non è 'me-la-cavo' o si sta giocando con 2 carte.
+    // se si è raggiunto questo punto, significa che il livello non è 'me-la-cavo' o 'arrogante', o si sta giocando con 2 carte.
     // blocca la board e controlla se c'è un match tra le due carte selezionate
     lockBoard = true;
     matchControll();
@@ -101,7 +120,7 @@ function flipCard() {
 function matchControll() {
     let match = false;
 
-    if (selectedLevel === 'me-la-cavo') {
+    if (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante') {
         match = firstCard.dataset.symbol === secondCard.dataset.symbol && firstCard.dataset.symbol === thirdCard.dataset.symbol;
     } else {
         match = firstCard.dataset.symbol === secondCard.dataset.symbol;
@@ -112,10 +131,21 @@ function matchControll() {
     movesElement.textContent = movesNumber;
 
     if (match) {
+        // Riproduce il suono di click solo se il suono è abilitato
+        if (soundEnabled) {
+            const clickSound = document.getElementById('clickSoundSuccess');
+            clickSound.play();
+        }
         point++;
-        if (point === symbols.length / (selectedLevel === 'me-la-cavo' ? 3 : 2)) {
-            alert(`Complimenti ${nameUser}`);
-            addToLeaderboard(); // Aggiungi l'utente alla classifica
+        if (point === symbols.length / (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante' ? 3 : 2)) {
+            // fine tempo
+            const endTime = new Date(); 
+            const timeTaken = Math.floor((endTime - startTime) / 1000);
+            setTimeout(() => {
+                alert(`Complimenti ${nameUser}`);
+                addToLeaderboard(timeTaken);
+                // addToLeaderboard(); // Aggiungi l'utente alla classifica
+            }, 1000);
         }
         disableCard();
     } else {
@@ -131,12 +161,15 @@ function disableCard() {
     setTimeout(() => {
         firstCard.removeEventListener('click', flipCard);
         secondCard.removeEventListener('click', flipCard);
-        if (selectedLevel === 'me-la-cavo') {
+        if (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante') {
             thirdCard.removeEventListener('click', flipCard);
             thirdCard.classList.add('matched');
+            thirdCard.innerHTML = '';
         }
         firstCard.classList.add('matched');
+        firstCard.innerHTML = '';
         secondCard.classList.add('matched');
+        secondCard.innerHTML = '';
         resetBoard();
     }, 1000);
 }
@@ -148,7 +181,7 @@ function turnOver() {
         secondCard.classList.remove('turned');
         firstCard.textContent = '';
         secondCard.textContent = '';
-        if (selectedLevel === 'me-la-cavo') {
+        if (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante') {
             thirdCard.classList.remove('turned');
             thirdCard.textContent = '';
         }
@@ -207,12 +240,14 @@ function startGame() {
     // mostra tutte le carte per 5 secondo
     showAllCards();
     setTimeout(hideAllCards, 5000);
+    // inizia il tempo
+    startTime = new Date();
 
     // Esegui showAllCards() ogni 10 secondi e nascondile dopo 3 secondi
     // setInterval(() => {
     //     showAllCards();
     //     setTimeout(hideAllCards, 3000);
-    // }, 10000);
+    // }, 15000);
 
 }
 
@@ -221,7 +256,9 @@ function showAllCards() {
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         // card.classList.add('turned');
-        card.textContent = card.dataset.symbol;
+        // card.textContent = card.dataset.symbol;
+        card.innerHTML = `<img src="css/img/${card.dataset.symbol}.png" alt="">`;
+        card.classList.add('turned');
     });
 }
 
@@ -230,7 +267,8 @@ function hideAllCards() {
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         // card.classList.remove('turned');
-        card.textContent = '';
+        card.innerHTML = '';
+        card.classList.remove('turned');
     });
 }
 
@@ -254,10 +292,15 @@ function resetGame() {
 }
 
 // aggiunta alla classifica
-function addToLeaderboard() {
+function addToLeaderboard(timeTaken) {
     const gamersList = document.getElementById('gamers');
     const listItem = document.createElement('li');
-    listItem.textContent = `${nameUser} - Mosse: ${movesNumber}, Errori: ${errorNumber}`;
+    // listItem.textContent = `${nameUser} </br> Mosse: ${movesNumber}, Errori: ${errorNumber}, Tempo: ${timeTaken} secondi`;
+    listItem.innerHTML = `
+        ${nameUser} <br>
+        Livello: ${nameLevel.textContent} <br>
+        Mosse: ${movesNumber}, Errori: ${errorNumber}, Tempo: ${timeTaken} secondi
+    `;
     gamersList.appendChild(listItem);
 }
 
