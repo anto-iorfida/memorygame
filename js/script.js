@@ -26,6 +26,10 @@ document.getElementById('offSound').addEventListener('click', () => {
     document.getElementById('offSound').textContent = soundEnabled ? 'Disabilita Suono' : 'Abilita Suono';
 });
 
+
+
+
+
 // array
 const symbolsNovellino = ['a', 'a', 'b', 'b', 'c', 'c', 'd', 'd', 'e', 'e', 'f', 'f'];
 const symbolsMeLaCavo = ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c', 'd', 'd', 'd', 'e', 'e', 'e', 'f', 'f', 'f'];
@@ -137,15 +141,18 @@ function matchControll() {
             clickSound.play();
         }
         point++;
+        // quando la partita finisce..
         if (point === symbols.length / (selectedLevel === 'me-la-cavo' || selectedLevel === 'arrogante' ? 3 : 2)) {
             // fine tempo
-            const endTime = new Date(); 
+            const endTime = new Date();
             const timeTaken = Math.floor((endTime - startTime) / 1000);
             setTimeout(() => {
                 alert(`Complimenti ${nameUser}`);
                 addToLeaderboard(timeTaken);
                 // addToLeaderboard(); // Aggiungi l'utente alla classifica
             }, 1000);
+            gridGame.innerHTML = "";
+            document.getElementById('buttonGame').textContent = 'Ricomincia Partita'
         }
         disableCard();
     } else {
@@ -224,7 +231,7 @@ function setCardWidth(width) {
 
 // funzione per avviare il gioco
 function startGame() {
-
+    document.getElementById('buttonGame').textContent = 'Rigioca'
     // cerca il nome all'utente usando prompt
     nameUser = prompt('Inserisci il tuo nome');
 
